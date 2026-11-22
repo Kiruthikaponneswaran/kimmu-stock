@@ -23,3 +23,11 @@ Set `JWT_SECRET` to a long random string when you host it.
 
 ## Data
 Stored in the `data` folder (git-ignored). Back it up to keep your records.
+
+## Photos
+Put `login-banner.jpg` and `dashboard-banner.jpg` in `public/images/` (see the README there). Products can show a photo too:
+paste an image link in the "Image link" field when adding or editing a product.
+
+## Hosting
+Set `ADMIN_PASSWORD` and `JWT_SECRET` as environment variables. The administrator is `admin@kimmustock.com`, and its
+password is whatever `ADMIN_PASSWORD` is set to each time the app starts.

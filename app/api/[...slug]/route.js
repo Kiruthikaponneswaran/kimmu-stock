@@ -123,7 +123,7 @@ const MASTERS = {
   customers: { table: 'customers', cols: ['name', 'email', 'phone', 'address'] },
   suppliers: { table: 'suppliers', cols: ['name', 'email', 'phone', 'address'] },
   products: {
-    table: 'products', cols: ['sku', 'name', 'category_id', 'price', 'cost', 'stock', 'reorder_level', 'description'],
+    table: 'products', cols: ['sku', 'name', 'category_id', 'price', 'cost', 'stock', 'reorder_level', 'description', 'image_url'],
     list: 'SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON c.id=p.category_id ORDER BY p.id DESC',
     created: (id, b, u) => { if (+b.stock > 0) log(id, +b.stock, 'opening', 'OPEN', 'Opening stock', u); },
     updated: (id, b, u, old) => { const d = Number(b.stock) - old.stock; if (d) log(id, d, 'adjustment', 'EDIT', 'Changed in product master', u); },

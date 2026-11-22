@@ -69,7 +69,7 @@ export default function Dashboard() {
     ['Inventory value', money(fin.inventory), COLORS[4]], ['Open purchase orders', counts.openPO, COLORS[3]], ['Planned production', counts.plannedMO, COLORS[5]]];
   return (
     <>
-      <div className="page-head"><h1>Dashboard</h1></div>
+      <div className="banner"><h1>Dashboard</h1><p>Your stock, sales and finances at a glance.</p></div>
       <div className="stats">{cards.map(([l, v, c]) => <div key={l} className="stat" style={{ '--c': c }}><span>{l}</span><strong>{v}</strong></div>)}</div>
       <div className="dash-grid three">
         <section className="card span2"><h2>Sales, last 30 days</h2><Area data={trend} /></section>

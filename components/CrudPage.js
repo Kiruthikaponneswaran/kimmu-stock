@@ -36,7 +36,7 @@ export default function CrudPage({ title, singular, module, sliceName, crud, fie
       <div className="page-head">
         <h1>{title}</h1>
         <input className="search" placeholder={`Search ${title.toLowerCase()}`} value={q} onChange={(e) => setQ(e.target.value)} />
-        <button className="btn" onClick={() => exportXlsx(title, fields.filter((f) => f.table !== false && f.key !== 'password').map((f) => ({ key: f.key, label: f.label })), shown)}>Export Excel</button>
+        <button className="btn" onClick={() => exportXlsx(title, fields.filter((f) => f.table !== false && f.key !== 'password' && !f.noExport).map((f) => ({ key: f.key, label: f.label })), shown)}>Export Excel</button>
         {can.create ? <button className="btn primary" onClick={() => { setErr(''); setForm({}); }}>Add {singular}</button> : null}
       </div>
       {err && !form && <p className="error">{err}</p>}
