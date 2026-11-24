@@ -45,6 +45,33 @@ function Gauge({ pct }) {
   );
 }
 
+function insights(d) {
+  const out = [];
+  const { fin, trend, counts, lowList, top, health } = d;
+  if (trend && trend.length > 13) {
+    const sum = (a) => a.reduce((t, x) => t + Number(x.value || 0), 0);
+    const half = Math.floor(trend.length / 2), prev = sum(trend.slice(0, half)), last = sum(trend.slice(half));
+    if (prev > 0) { const ch = Math.round(((last - prev) / prev) * 100); out.push([ch >= 0 ? 'up' : 'down', ch >= 0 ? `Sales are up ${ch}% over the last ${trend.length - half} days compared with the period before.` : `Sales are down ${Math.abs(ch)}% over the last ${trend.length - half} days. Consider a promotion on your best sellers.`]); }
+  }
+  if (counts.low) out.push(['warn', `${counts.low} product${counts.low > 1 ? 's' : ''} below reorder level${lowList[0] ? `, starting with ${lowList[0].name}` : ''}. Create a purchase order soon.`]);
+  else out.push(['up', 'All products are above their reorder level. Stock looks healthy.']);
+  if (top && top[0]) out.push(['star', `${top[0].name} is your best seller. Keep it well stocked.`]);
+  if (fin && fin.net < 0) out.push(['down', 'Net profit is negative. Review expenses and purchase costs.']);
+  else if (fin && fin.net > 0) out.push(['up', `Net profit is positive at ${money(fin.net)}.`]);
+  out.push(['info', `Overall stock health is ${health}%.`]);
+  return out.slice(0, 4);
+}
+const ICON = { up: '▲', down: '▼', warn: '!', star: '★', info: 'i' };
+function AiInsights({ d }) {
+  const list = insights(d);
+  return (
+    <section className="card ai-card">
+      <h2><span className="spark">✦</span> AI insights <small>smart analysis of your live data</small></h2>
+      <ul className="ai-list">{list.map(([k, t], i) => <li key={i} className={`ai-${k}`} style={{ '--d': `${i * 140}ms` }}><b>{ICON[k]}</b><span>{t}</span></li>)}</ul>
+    </section>
+  );
+}
+
 export default function Dashboard() {
   const [d, setD] = useState(null); const [err, setErr] = useState('');
   useEffect(() => { api('/dashboard').then(setD).catch((e) => setErr(e.message)); }, []);
@@ -70,6 +97,7 @@ export default function Dashboard() {
   return (
     <>
       <div className="banner"><h1>Dashboard</h1><p>Your stock, sales and finances at a glance.</p></div>
+      <AiInsights d={d} />
       <div className="stats">{cards.map(([l, v, c]) => <div key={l} className="stat" style={{ '--c': c }}><span>{l}</span><strong>{v}</strong></div>)}</div>
       <div className="dash-grid three">
         <section className="card span2"><h2>Sales, last 30 days</h2><Area data={trend} /></section>
